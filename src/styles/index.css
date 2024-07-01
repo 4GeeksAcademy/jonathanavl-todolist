@@ -1,12 +1,92 @@
+body {
+  background-image: url(https://img.freepik.com/fotos-premium/fondo-blanco-enfoque-suave-textura-cierre-tela_41969-4883.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
 
-/* 
+.container {
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 380px;
+  padding: 20px;
+  text-align: center;
+}
 
-    You can write your own styles here...
-    
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
+h1 {
+  font-size: 3rem;
+  color: #555;
+  margin: 0 0 20px 0;
+}
 
-*/
+form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+  width: 75%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+
+button[type="submit"] {
+  padding: 10px 20px;
+  border: none;
+  background: #333;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background: #555;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: #f9f9f9;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+li .delete-button {
+  background-color: red;
+  border: none;
+  padding: 5px 10px;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  display: none;
+  position: absolute;
+  right: 10px;
+}
+
+li:hover .delete-button {
+  display: block;
+}
+
+.no-tasks {
+  text-align: center;
+  color: #888;
+}
