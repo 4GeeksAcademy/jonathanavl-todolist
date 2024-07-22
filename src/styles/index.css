@@ -10,7 +10,13 @@ body {
   align-items: center;
   margin: 0;
 }
-
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box; /* Esto asegura que el padding no incremente el ancho total */
+}
 .container {
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -41,7 +47,7 @@ input[type="text"] {
 }
 
 
-button[type="submit"] {
+.limpiar{
   padding: 10px 20px;
   border: none;
   background: #333;
@@ -49,8 +55,7 @@ button[type="submit"] {
   border-radius: 5px;
   cursor: pointer;
 }
-
-button[type="submit"]:hover {
+.limpiar:hover {
   background: #555;
 }
 
@@ -71,7 +76,7 @@ li {
 }
 
 li .delete-button {
-  background-color: red;
+  background-color: rgb(253, 85, 85);
   border: none;
   padding: 5px 10px;
   color: white;
@@ -80,6 +85,9 @@ li .delete-button {
   display: none;
   position: absolute;
   right: 10px;
+}
+li .delete-button:hover {
+  background: #ce0303;
 }
 
 li:hover .delete-button {
@@ -90,3 +98,4 @@ li:hover .delete-button {
   text-align: center;
   color: #888;
 }
+
