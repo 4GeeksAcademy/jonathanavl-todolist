@@ -1,12 +1,14 @@
-// index.js
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import App from "./component/app";
-import "../styles/index.css"; // Asegúrate de que este archivo esté en el lugar correcto
+import "../styles/index.css";
 
-ReactDOM.render(
+
+const container = document.getElementById("app");
+const root = createRoot(container);
+
+root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  document.getElementById("app") // Asegúrate de que el elemento con id="app" esté presente en tu HTML
+  </React.StrictMode>
 );

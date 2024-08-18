@@ -1,4 +1,3 @@
-// App.jsx
 import React, { useState, useEffect } from "react";
 
 const API_URL = "https://playground.4geeks.com/todo";
@@ -14,43 +13,58 @@ const App = () => {
 
   useEffect(() => {
     updateRemainingTasks(tasks);
-    syncTasksWithServer(tasks);
   }, [tasks]);
 
-  const fetchTasksFromServer = () => {
-    fetch(`${API_URL}/todos/jonathanavl`)
-      .then(response => response.json())
-      .then(data => {
-        // Asegúrate de que data sea un array
-        const tasksArray = Array.isArray(data) ? data : [];
-        setTasks(tasksArray);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        setTasks([]); // En caso de error, establece un array vacío
+  const fetchTasksFromServer = async () => {
+    try {
+      const response = await fetch(`${API_URL}/users/jonathanavl`, {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+        },
       });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      const data = await response.json();
+      setTasks(data.todos || []); 
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      setTasks([]);
+    }
   };
 
-  const syncTasksWithServer = (updatedTasks) => {
-    fetch(`${API_URL}/todos/jonathanavl`, {
-      method: "PUT",
-      body: JSON.stringify(updatedTasks),
-      headers: {
-        "Content-Type": "application/json"
+  const syncTasksWithServer = async (todo_id, updatedTask) => {
+    try {
+      const response = await fetch(`${API_URL}/todos/${todo_id}`, {
+        method: "PUT",
+        body: JSON.stringify(updatedTask),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
-    })
-    .then(resp => {
-      console.log(resp.ok);
-      console.log(resp.status);
-      console.log(resp.text());
-      return resp.json();
-    })
-    .then(data => {
-      console.log(data);
-    })
-    .catch(error => {
-      console.log(error);
-    });
+      await response.json();
+    } catch (error) {
+      console.error("Error syncing task:", error);
+    }
+  };
+
+  const deleteUserAndTasks = async () => {
+    try {
+      const response = await fetch(`${API_URL}//todos/1`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setTasks([]);
+      } else {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Error deleting user and tasks:", error);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -61,21 +75,25 @@ const App = () => {
     e.preventDefault();
     if (task.trim()) {
       const newTask = {
-        id: Date.now(),
         label: task,
-        done: false
+        is_done: false,
+        id:0,
       };
-      setTasks(prevTasks => [...prevTasks, newTask]);
+      const updatedTasks = [...tasks, newTask];
+      setTasks(updatedTasks);
+      syncTasksWithServer(updatedTasks);
       setTask("");
     }
   };
 
   const handleDelete = (taskId) => {
-    setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
+    setTasks(updatedTasks);
+    syncTasksWithServer(updatedTasks);
   };
 
   const handleClearAll = () => {
-    setTasks([]);
+    deleteUserAndTasks();
   };
 
   const updateRemainingTasks = (updatedTasks) => {
@@ -112,7 +130,9 @@ const App = () => {
           ))
         )}
       </ul>
-      <button className="limpiar" onClick={handleClearAll}>Limpiar todas las tareas</button>
+      <button className="limpiar" onClick={handleClearAll}>
+        Limpiar todas las tareas
+      </button>
       <div className="remaining-tasks">
         Quedan {remainingTasks} {remainingTasks === 1 ? "nota" : "notas"}
       </div>
