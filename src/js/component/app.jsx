@@ -34,9 +34,9 @@ const App = () => {
     }
   };
 
-  const syncTasksWithServer = async (todo_id, updatedTask) => {
+  const syncTasksWithServer = async (taskId, updatedTask) => {
     try {
-      const response = await fetch(`${API_URL}/todos/${todo_id}`, {
+      const response = await fetch(`${API_URL}/todos/${taskId}`, {
         method: "PUT",
         body: JSON.stringify(updatedTask),
         headers: {
@@ -54,7 +54,7 @@ const App = () => {
 
   const deleteUserAndTasks = async () => {
     try {
-      const response = await fetch(`${API_URL}//todos/1`, {
+      const response = await fetch(`${API_URL}/users/jonathanavl`, {
         method: "DELETE",
       });
       if (response.ok) {
@@ -71,25 +71,56 @@ const App = () => {
     setTask(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (task.trim()) {
       const newTask = {
         label: task,
         is_done: false,
-        id:0,
       };
-      const updatedTasks = [...tasks, newTask];
-      setTasks(updatedTasks);
-      syncTasksWithServer(updatedTasks);
-      setTask("");
+
+      try {
+        const response = await fetch(`${API_URL}/todos/jonathanavl`, {
+          method: "POST",
+          body: JSON.stringify(newTask),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        const createdTask = await response.json();
+        setTasks([...tasks, createdTask]);
+        setTask("");
+      } catch (error) {
+        console.error("Error adding task:", error);
+      }
     }
   };
 
-  const handleDelete = (taskId) => {
-    const updatedTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(updatedTasks);
-    syncTasksWithServer(updatedTasks);
+
+  const handleDelete = async (taskId) => {
+    try {
+      const response = await fetch(`${API_URL}/todos/${taskId}`, {
+        method: "DELETE",
+        headers: {
+          "Accept": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+  
+      // Remove the deleted task from the local state
+      const updatedTasks = tasks.filter((task) => task.id !== taskId);
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
 
   const handleClearAll = () => {
